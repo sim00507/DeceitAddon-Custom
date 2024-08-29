@@ -15,7 +15,7 @@ UltimateHooks UltHook;
 uintptr_t RtlInterlockedCompareExchange64Offst;
 std::vector<EzHook> EzHooks;
 
-//относительная кодировка E9 jmp используется следующим образом :
+//относительная кодировк?E9 jmp использует? следующи?образо?:
 //
 //CURRENT_RVA: jmp(DESTINATION_RVA - CURRENT_RVA - 5[sizeof(E9 xx xx xx xx)])
 

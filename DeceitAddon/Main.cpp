@@ -23,6 +23,7 @@ float AimSpeed = 2;
 bool aimlock = true;
 bool TpToBlood = false;
 bool doLog = false;
+// bool GodMode = false;
 
 uintptr_t o_rwi = 0;
 
@@ -78,6 +79,9 @@ void writeToFile(string FileName, string text) {
 }
 
 bool ret0 = false;
+
+
+
 
 int32 __fastcall h_rwi(IPhysicalWorld* a1, s_rwi_params& srwi, char* p_name_tag, int32 i)
 {
@@ -343,6 +347,8 @@ bool ESP = true;
 bool Aim = true;
 bool ShowInfect = true;
 
+
+
 IEntity* closestPlayerToAim(float distance) {
 	Vector3 center = Vector3(Render::RenderWidth / 2, Render::RenderHeight / 2, 0);
 	float closest = FLT_MAX;
@@ -404,7 +410,7 @@ void Main::MainWindow() {
 
 	Render::EndOverlayTab();
 
-	if (localPlayer)
+	if (localPlayer)        // 공격딜레이, 범위 
 	{
 		auto weapon = localPlayer->GetActor()->GetCurrentItem();
 		if (weapon) {
@@ -438,6 +444,7 @@ void Main::MainWindow() {
 	ImGui::Checkbox("Aim", &Aim);
 	ImGui::Checkbox("Show infect window", &ShowInfect);
 	ImGui::Checkbox("TP to Blood", &TpToBlood);
+	// ImGui::Checkbox("God Mode", &GodMode);
 
 	ImGui::InputInt("Aim FOV", &AimFov);
 	ImGui::InputFloat("Aim Speed", &AimSpeed);
@@ -479,7 +486,18 @@ void Main::MainWindow() {
 
 
 	localPlayer = pGameFramework->GetClientEntity();
+	/*
+	uintptr_t healthAddresses[] = {
+	0x24926E247C0, 0x24927EAC80, 0x249769ACC0, 0x24928EBC80,
+	0x24928C5E40, 0x24AB40FE4C, 0x24D59A4114, 0x24DA62800E0
+	};
+	
 
+	if (GodMode)
+		for (int i = 0; i < 8; ++i) {
+			*(float*)healthAddresses[i] = 100.0f; // 각 주소의 값을 100으로 설정
+		}
+	*/
 	if (pEntitySystem->GetEntityNum() == 0)
 	{
 		detectedBags.clear();
@@ -583,6 +601,16 @@ void Main::MainWindow() {
 				CopyToClipboard((char*)(to_hex(actor)).c_str());
 			}
 		}
+	}
+
+	if (ImGui::CollapsingHeader("Misc")) {
+		ImGui::BulletText("F - Aimbot: Automatically aim and shoot at the closest target.");
+		ImGui::BulletText("HOME - Move up: Increase player Z position by 1 unit.");
+		ImGui::BulletText("INSERT - Move down: Decrease player Z position by 1 unit.");
+		ImGui::BulletText("DELETE - Revive: Teleport or revive at a specific position.");
+		ImGui::BulletText("T - Teleport to Bloodpack.");
+		ImGui::BulletText("TAB - Teleport to Team");
+		ImGui::BulletText("END - Exit");
 	}
 
 
@@ -882,6 +910,7 @@ void Main::OverlayWindow() {
 			}
 
 	}
+
 
 
 	/*for (auto player : pEntitySystem->GetFuses()) {
